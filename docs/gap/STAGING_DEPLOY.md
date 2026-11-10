@@ -40,3 +40,14 @@ export AZOA_BASE_URL=http://127.0.0.1:5000
 ## Guardrails
 
 No OASIS `.cs` copies. Avatar routes are a thin facade over `UserManager`.
+
+
+## Manual unblock (Surreal)
+
+Railway is still launching the Surreal image without `start` args (container prints CLI help and exits). In the Railway dashboard for service `surrealdb`, set **Custom Start Command** to:
+
+```text
+start --log info --user root --pass root rocksdb:///data/db
+```
+
+(or `memory` for ephemeral smoke). Then redeploy `azoa-api`. After `/health` returns 200, set `AZOA_BASE_URL` as above and run the register/authenticate curls.
