@@ -1,0 +1,4 @@
+FROM surrealdb/surrealdb:v3.1.4
+# Railway bare image prints help without start args; bake CMD into the image.
+ENTRYPOINT ["/surreal"]
+CMD ["start", "--log", "info", "--user", "root", "--pass", "root", "rocksdb:///data/db"]

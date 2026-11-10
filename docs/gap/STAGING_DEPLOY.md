@@ -1,30 +1,40 @@
 # AZOA fork staging for Field Guide
 
-**Repo:** https://github.com/maxgershfield/azoa-autonomous-zones-of-action  
+**Fork:** https://github.com/maxgershfield/azoa-autonomous-zones-of-action  
 **Branch:** `field-guide-azoa-cutover`  
-**Upstream:** JadeZaher/azoa-autonomous-zones-of-action
+**Railway project:** `azoa-fg-staging` (`d8b733d9-2421-4f1a-a79a-18ceec962741`)  
+**API URL:** https://azoa-api-production-56786d11.up.railway.app  
 
-## Railway (recommended)
+## Services
 
-1. Create a Railway project linked to `maxgershfield/azoa-autonomous-zones-of-action`.
-2. Deploy branch `field-guide-azoa-cutover` (or merge to a `staging` branch).
-3. Add SurrealDB service (see `docs/NODE-HOST.md` and `deploy/railway/`).
-4. Set at least:
-   - `Jwt__Key` (32+ chars)
-   - `Jwt__Issuer` / `Jwt__Audience`
-   - `SurrealDb__*` / `SurrealRuntime__*` per NODE-HOST
-   - `AvatarCompat__GoogleClientId` = Field Guide GIS client id
-   - Self-registration enabled for staging (`SelfRegistration` / host policy per AZOA docs)
-5. Public HTTPS URL becomes `AZOA_BASE_URL` for hitchhikers-auth and Field Guide.
+| Service | Status notes |
+|---------|----------------|
+| `surrealdb` | Image `surrealdb/surrealdb:v3.1.4` + volume `/data`. **Must** run with start args: `start --log info --user root --pass root rocksdb:///data/db` (wrapper: `deploy/railway/Dockerfile.surrealdb`). Without this, the container prints help and exits. |
+| `azoa-api` | GitHub repo `maxgershfield/azoa-autonomous-zones-of-action` @ `field-guide-azoa-cutover`. Domain on port 8080. |
 
-Root `railway.json` is already present. Prefer the documented Surreal + WebAPI composition over bare `railway up` from an unrelated monorepo root.
+## Required API variables
 
-## Local smoke (before Railway)
+- `Jwt__Key`, `Jwt__Issuer`, `Jwt__Audience`
+- `ASPNETCORE_ENVIRONMENT=Development` (allows boot-time schema for staging)
+- `SURREALFORGE_URL=http://surrealdb.railway.internal:8000` (+ NS/DB/USER/PASS)
+- `SurrealRuntime__Endpoint=http://surrealdb.railway.internal:8000` (+ matching NS/DB/user/pass)
+- `ASPNETCORE_URLS=http://0.0.0.0:8080` (or honor `$PORT`)
+- `AvatarCompat__GoogleClientId` = Field Guide GIS client id
+
+## Client pointing
 
 ```bash
-./dev-up.sh --no-build   # or full rebuild
-curl -s http://127.0.0.1:5000/health || curl -s http://127.0.0.1:5000/swagger/index.html
-# then CLIENT_POINTING.md curl register/authenticate
+export AZOA_BASE_URL=https://azoa-api-production-56786d11.up.railway.app
+```
+
+See OASIS tree `Docs/AZOA_GAP/CLIENT_POINTING.md`.
+
+## Local smoke (always available)
+
+```bash
+./dev-up.sh
+export AZOA_BASE_URL=http://127.0.0.1:5000
+# then register/authenticate curls from CLIENT_POINTING.md
 ```
 
 ## Guardrails
