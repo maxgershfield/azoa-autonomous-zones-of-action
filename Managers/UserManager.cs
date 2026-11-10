@@ -105,7 +105,10 @@ public class UserManager : IUserManager
         {
             var all = await _userStore.GetAllAsync(default);
             if (all.IsError) return AZOAResult<string>.Failure(all.Message);
-            user = ResolveLoginSubject(all.Result, model.Email);
+            // hitchhikers-auth / OASIS wire may send a username in the identity slot;
+            // resolve email first, then username, so one password path serves both.
+            user = ResolveLoginSubject(all.Result, model.Email)
+                ?? ResolveLoginSubjectByUsername(all.Result, model.Email);
         }
 
         if (user == null || !user.IsActive || user.OwnerTenantId is not null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
@@ -138,6 +141,22 @@ public class UserManager : IUserManager
             .ToList();
         var exact = folded.FirstOrDefault(row =>
             string.Equals(row.Email, candidate, StringComparison.Ordinal));
+
+        return exact ?? (folded.Count == 1 ? folded[0] : null);
+    }
+
+    /// <summary>Username match with the same exact-then-lone-folded rule as email.</summary>
+    private static IUser? ResolveLoginSubjectByUsername(IEnumerable<IUser>? users, string? username)
+    {
+        var candidate = username?.Trim();
+        if (users is null || string.IsNullOrEmpty(candidate))
+            return null;
+
+        var folded = users
+            .Where(row => string.Equals(row.Username, candidate, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var exact = folded.FirstOrDefault(row =>
+            string.Equals(row.Username, candidate, StringComparison.Ordinal));
 
         return exact ?? (folded.Count == 1 ? folded[0] : null);
     }

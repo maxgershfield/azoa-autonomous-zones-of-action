@@ -71,6 +71,9 @@ public sealed class UserLoginTokenIssuer : IUserLoginTokenIssuer
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            // Field Guide / hitchhikers-auth OASIS wire: claim "id" is the avatar GUID.
+            // Keep sub for AZOA FirstPartyLogin policies; both are the same User.Id.
+            new Claim("id", user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(ClaimTypes.Name, user.Username),
             // token-type segregation (security-review S5): a login token and a tenant

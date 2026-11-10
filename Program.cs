@@ -1027,6 +1027,11 @@ builder.Services.AddScoped<AZOA.WebAPI.Services.Auth.IOAuthExchangeCodeService,
 // are the same credential, not two shapes that drift.
 builder.Services.AddSingleton<AZOA.WebAPI.Services.Auth.IUserLoginTokenIssuer,
     AZOA.WebAPI.Services.Auth.UserLoginTokenIssuer>();
+builder.Services.AddSingleton<AZOA.WebAPI.Services.Auth.IAvatarCompatRefreshTokenService,
+    AZOA.WebAPI.Services.Auth.AvatarCompatRefreshTokenService>();
+builder.Services.AddHttpClient(nameof(AZOA.WebAPI.Services.Auth.GoogleIdTokenValidator));
+builder.Services.AddSingleton<AZOA.WebAPI.Services.Auth.IGoogleIdTokenValidator,
+    AZOA.WebAPI.Services.Auth.GoogleIdTokenValidator>();
 // tenant-consent-delegation: the live grant store (the seam's source of truth),
 // the immutable audit trail (AC10), and the webhook outbox + registration (AC7).
 builder.Services.AddScoped<AZOA.WebAPI.Interfaces.Stores.IConsentGrantStore,
