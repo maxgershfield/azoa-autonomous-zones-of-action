@@ -2,12 +2,14 @@
 
 ## P0 (cutover blockers)
 
-1. Auth bridge (`/api/avatar/*` + JWT `id`)
-2. Holon CRUD used by notes/places/events (facade or client rewrite of `/api/data/*`)
-3. Wallet ensure + read + NFT list
-4. Quest start/progress/complete (Action semantics or STAR-compat)
-5. Check-in path end-to-end
-6. Geo nearby (or substitute) for map layer
+1. Auth bridge (`/api/avatar/*` + JWT `id`) — shipped
+2. Holon CRUD (`/api/data/*` facade) — shipped
+3. Wallet ensure + read + NFT list — shipped (ledger mint)
+4. Quest start/progress/complete (STAR-compat) — shipped
+5. Check-in path end-to-end — ready for staging smoke
+6. Geo nearby / place-pin (STAR-compat) — shipped
+
+See [STAR_NFT_HOLON_ADAPTERS.md](STAR_NFT_HOLON_ADAPTERS.md).
 
 ## P1
 

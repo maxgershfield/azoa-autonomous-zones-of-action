@@ -51,6 +51,9 @@ builder.Services.AddControllers(options =>
     })
     .AddJsonOptions(options =>
     {
+        // Field Guide / OASIS clients send PascalCase bodies; AZOA models are PascalCase
+        // with camelCase wire output. Case-insensitive input keeps both happy.
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 var dataProtectionApplicationName = builder.Configuration["DataProtection:ApplicationName"]
@@ -1032,6 +1035,11 @@ builder.Services.AddSingleton<AZOA.WebAPI.Services.Auth.IAvatarCompatRefreshToke
 builder.Services.AddHttpClient(nameof(AZOA.WebAPI.Services.Auth.GoogleIdTokenValidator));
 builder.Services.AddSingleton<AZOA.WebAPI.Services.Auth.IGoogleIdTokenValidator,
     AZOA.WebAPI.Services.Auth.GoogleIdTokenValidator>();
+// Field Guide STAR / OASIS wire facades (quests, geo, data, nft, wallet, keys).
+builder.Services.AddSingleton<AZOA.WebAPI.Services.FieldGuide.IFieldGuideQuestCatalog,
+    AZOA.WebAPI.Services.FieldGuide.FieldGuideQuestCatalog>();
+builder.Services.AddSingleton<AZOA.WebAPI.Services.FieldGuide.IFieldGuideGeoPinStore,
+    AZOA.WebAPI.Services.FieldGuide.FieldGuideGeoPinStore>();
 // tenant-consent-delegation: the live grant store (the seam's source of truth),
 // the immutable audit trail (AC10), and the webhook outbox + registration (AC7).
 builder.Services.AddScoped<AZOA.WebAPI.Interfaces.Stores.IConsentGrantStore,

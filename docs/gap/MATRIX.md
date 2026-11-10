@@ -12,11 +12,11 @@
 | Refresh / revoke token | avatar refresh/revoke | AuthNotBefore logout only | No refresh store | **P0** | Compat facade + opaque refresh |
 | get-logged-in-avatar | GET avatar | GET `/api/user/{id}` | No me-from-bearer | **P0** | Compat facade |
 | JWT claim `id` | OASIS mint | claim `sub` only | hitchhikers breaks | **P0** | Mint `id`+`sub` |
-| Holon notes/places/events | `/api/data/save-holon` etc | `/api/holon` | Shape/metadata query | **P0** | Compat facade or FG rewrite |
-| Wallet ensure + read | keys + wallet APIs | `/api/wallet` | Partial shape | **P0** | Adapter / client map |
-| NFT list + mint | `/api/nft/*` | `/api/nft`, `/api/usernft` | Partial | **P0** | Adapter |
-| Quest start/progress/complete | STAR Quests | Actions/runs | No pin-title progress | **P0** | New Action contract or STAR-compat |
-| Geo nearby / place-pin | STAR GeoNFTs | none | Missing | **P0** | New AZOA POI feature |
+| Holon notes/places/events | `/api/data/save-holon` etc | `/api/holon` | **Shipped** `/api/data/*` facade | **P0** | Compat facade (`DataHolonCompatController`) |
+| Wallet ensure + read | keys + wallet APIs | `/api/wallet` | **Shipped** avatar + keys facades | **P0** | Adapter |
+| NFT list + mint | `/api/nft/*` | `/api/nft`, `/api/usernft` | **Shipped** ledger mint (`fg-collectible`) | **P0** | Adapter (on-chain later) |
+| Quest start/progress/complete | STAR Quests | Actions/runs | **Shipped** `/api/Quests` catalog | **P0** | STAR-compat |
+| Geo nearby / place-pin | STAR GeoNFTs | none | **Shipped** `/api/GeoNFTs` | **P0** | STAR-compat |
 | Trust Graph UI id | avatar GUID | User.Id | Bind only | **P0** | keep client-side + same GUID |
 | Trust Graph HTTP | `/api/trustgraph/*` | none | Missing | **P1** | New AZOA feature later |
 | FG MCP `field_guide_*` | finsbury-guide MCP | platform MCP only | Product tools Missing | **P1** | Keep FG MCP as BFF |
@@ -35,9 +35,10 @@
 1. **P0-auth** — `/api/avatar/*` compat + JWT `id` + refresh (this sprint)
 2. **P0-clients** — point hitchhikers-auth / FG web / FG MCP at fork staging
 3. **P0-tg-id** — document User.Id ≡ avatarId for Trust Graph
-4. **P1-holon-wallet** — data/wallet facades or FG client remap
-5. **P1-quest-geo** — Action progress + POI nearby
-6. **P2** — TG HTTP, photos, portability
+4. **P0-star-nft-holon** — STAR + NFT/wallet + `/api/data` facades (shipped; see STAR_NFT_HOLON_ADAPTERS.md)
+5. **P1-persist-quest-geo** — Surreal-backed quest/geo stores for multi-instance
+6. **P1-onchain-mint** — wire FG mint to AZOA NftManager when JWT has NftMint scope
+7. **P2** — TG HTTP, photos, portability
 
 ## Agent artifacts
 

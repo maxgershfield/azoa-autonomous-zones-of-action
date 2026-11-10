@@ -6,4 +6,5 @@ Produced by the coordinator swarm against Max's AZOA fork.
 - `PRODUCT_APIS.md` — Field Guide / Trust Graph / MCP calls vs AZOA
 - `WEB4_KEEPERS.md` — Web4-only value ranked for FG cutover
 - `IP.md` — copy-risk and license notes
-- Merged matrix lives in the OASIS tree: `Docs/AZOA_GAP/MATRIX.md`
+- `STAR_NFT_HOLON_ADAPTERS.md` — STAR Quests/GeoNFTs + `/api/data` + NFT/wallet/keys facades
+- Merged matrix: [MATRIX.md](MATRIX.md)
